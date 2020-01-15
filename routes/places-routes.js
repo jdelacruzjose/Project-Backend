@@ -1,6 +1,13 @@
-const express = require('express');
+const express     = require('express');
 
-const router  = express.Router();
+const router      = express.Router();
+const Fake_Places = [
+  {
+    id:'p1',
+    title: 'Empire State Building',
+
+  }
+]
 
 router.get('/', (req, res, next) =>{
   console.log('Get Req Places')
