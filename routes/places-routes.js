@@ -1,5 +1,5 @@
 const express     = require('express');
-
+const HttpError   = require('../models/http-error'); 
 const router      = express.Router();
 const Fake_Places = [
   {
@@ -24,9 +24,7 @@ router.get('/:pid', (req, res, next) =>{
   });
 
   if (!place) {
-    const error = new Error('Could not find place for this id.');
-    error.code  = 404;
-    throw error;
+    throw new HttpError('Could not find place for this id.', 404);
   }
   
   res.json({place});
@@ -40,11 +38,11 @@ router.get('/user/:uid', (req, res, next) =>{
   });
 
   if (!place) {
-    const error = new Error('Could not find place for this user id.');
-    error.code  = 404;
-    return next(error);
-  }
-  
+    return next(
+      new HttpError('Could not find place for this user id.', 404)
+      );
+    }
+    
   res.json({place});
 });
 
