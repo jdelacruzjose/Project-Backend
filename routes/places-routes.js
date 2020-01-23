@@ -1,49 +1,11 @@
 const express     = require('express');
-const HttpError   = require('../models/http-error'); 
 const router      = express.Router();
-const Fake_Places = [
-  {
-    id:'p1',
-    title: 'Empire State Building',
-    description: 'One of the most famous sky scrapers in the world',
-    location: {
-      lat: 40.7484474,
-      lng: -73.9871516
-    },
-    address: '20 W 34th St, New York, NY 10001',
-    creator: 'u1'
+const placeControllers = require('../controllers/places-controllers');
 
-  }
-];
+router.get('/:pid', placeControllers.getPlaceByID);
 
-router.get('/:pid', (req, res, next) =>{
-  const placeId = req.params.pid;
-  
-  const place   = Fake_Places.find(p => {
-    return p.id === placeId
-  });
+router.get('/user/:uid', placeControllers.getPlaceByUserID);
 
-  if (!place) {
-    throw new HttpError('Could not find place for this id.', 404);
-  }
-  
-  res.json({place});
-});
-
-router.get('/user/:uid', (req, res, next) =>{
-  const userID = req.params.uid;
-
-  const place = Fake_Places.find(p => {
-    return p.creator === userID;
-  });
-
-  if (!place) {
-    return next(
-      new HttpError('Could not find place for this user id.', 404)
-      );
-    }
-    
-  res.json({place});
-});
+router.post('/', placeControllers.createPlace);
 
 module.exports = router;
