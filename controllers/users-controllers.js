@@ -15,7 +15,12 @@ const getUsers = (req, res, next) => {
 };
 
 const signup = (req, res, next) => {
-  const{ userName, email, password} = req.body;
+  const{ name, email, password} = req.body;
+
+  const hasUser = DUMMY_USERS.find(u => u.email === email);
+  if(hasUser){
+    throw new HttpError('Could not create user, email already exists.', 422)
+  }
 
   const createdUser = {
     id: uuid(),
@@ -32,10 +37,11 @@ const signup = (req, res, next) => {
 const login = (req, res, next) => {
   const{ email, password} = req.body;
 
-  const indentifiedUser = DUMMY_USERS.find(u => u.email === email);
-    if(!indentifiedUser){
-        throw new HttpError()
+  const identifiedUser = DUMMY_USERS.find(u => u.email === email);
+    if(!identifiedUser || identifiedUser.password !== password) {
+        throw new HttpError('Could not indentify User', 401)
     }
+    res.json({message: 'Logged in'});
 };
 
 exports.getUsers  = getUsers;
